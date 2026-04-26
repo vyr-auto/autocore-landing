@@ -67,6 +67,12 @@ export function Footer() {
                 <Mail className="h-3 w-3 text-[#d4af37bf]" />
                 <span>gorcovd@gmail.com</span>
               </a>
+              <a
+                href="/privacy"
+                className="inline-flex text-[13px] leading-[1.4] tracking-[-0.004em] text-[#F5F1E8A6] transition-colors duration-300 hover:text-[#F5F1E8]"
+              >
+                Политика конфиденциальности
+              </a>
             </div>
           </div>
         </div>

@@ -1,8 +1,9 @@
 "use client"
 
-import { motion, useReducedMotion } from "framer-motion"
+import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { type MouseEvent } from "react"
+import { useLandingMotion } from "@/hooks/use-landing-motion"
 import {
   ArrowRight,
   FileSpreadsheet,
@@ -35,7 +36,7 @@ const trustIndicators = [
 ]
 
 export function Hero() {
-  const shouldReduceMotion = useReducedMotion()
+  const { shouldReduceMotion, fadeUpTransition, tapScale } = useLandingMotion()
 
   const handleSectionClick = (href: string) => (event: MouseEvent<HTMLAnchorElement>) => {
     if (!href.startsWith("#")) return
@@ -52,11 +53,9 @@ export function Hero() {
   }
 
   const fadeUp = {
-    initial: { opacity: 0, y: shouldReduceMotion ? 0 : 24 },
+    initial: { opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 24 },
     animate: { opacity: 1, y: 0 },
   }
-
-  const floatAnimation = () => undefined
 
   return (
     <section className="premium-tone-hero relative flex min-h-[100svh] items-center justify-center overflow-x-hidden">
@@ -75,13 +74,13 @@ export function Hero() {
         <motion.div
           aria-hidden
           animate={undefined}
-          className="absolute left-1/2 top-1/3 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-[#d4af3720] blur-[72px]"
+          className="hero-glow-blur absolute left-1/2 top-1/3 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-[#d4af3720] blur-[72px]"
         />
       </div>
 
       <div className="container relative z-10 mx-auto px-4 pb-12 pt-24 sm:px-6 lg:px-8 lg:pb-[4.5rem] lg:pt-[7.5rem]">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div {...fadeUp} transition={{ duration: 0.55, delay: 0.1 }}>
+          <motion.div {...fadeUp} transition={fadeUpTransition(0.1)}>
             <h1 className="text-balance text-[2.08rem] sm:text-[2.86rem] lg:text-[3.75rem] xl:text-[4.24rem] font-semibold leading-[1.03] tracking-[-0.038em]">
               <span className="text-[#F5F1E8]">Автоматизируем рутину, отчёты и данные </span>
               <br className="hidden sm:block" />
@@ -92,7 +91,7 @@ export function Hero() {
 
           <motion.p
             {...fadeUp}
-            transition={{ duration: 0.55, delay: 0.22 }}
+            transition={fadeUpTransition(0.22)}
             className="mx-auto mt-6 max-w-3xl text-pretty text-[15px] sm:text-[17px] lg:text-[19px] font-medium text-[#F5F1E8] leading-[1.68] tracking-[-0.01em]"
           >
             Настраиваем Excel, VBA, Python, документы, прайсы, заявки, уведомления и внутренние
@@ -101,7 +100,7 @@ export function Hero() {
 
           <motion.div
             {...fadeUp}
-            transition={{ duration: 0.55, delay: 0.3 }}
+            transition={fadeUpTransition(0.3)}
             className="mt-8 flex flex-col items-stretch justify-center gap-3.5 sm:mt-9 sm:flex-row sm:items-center"
           >
             <Button
@@ -126,7 +125,7 @@ export function Hero() {
 
           <motion.p
             {...fadeUp}
-            transition={{ duration: 0.55, delay: 0.42 }}
+            transition={fadeUpTransition(0.42)}
             className="mt-4 text-[13px] leading-[1.45] tracking-[0.002em] text-[#F5F1E8B8]"
           >
             Можно начать с одного отчёта, прайса или повторяющейся операции
@@ -134,7 +133,7 @@ export function Hero() {
 
           <motion.div
             {...fadeUp}
-            transition={{ duration: 0.6, delay: 0.5 }}
+            transition={fadeUpTransition(0.5)}
             className="mt-14 lg:mt-18"
           >
             <div className="relative max-w-4xl mx-auto">
@@ -148,9 +147,9 @@ export function Hero() {
                 {pipelineSteps.map((step, index) => (
                   <motion.div
                     key={step.label}
-                    initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 14 }}
+                    initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 14 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.35, delay: 0.6 + index * 0.05 }}
+                    transition={fadeUpTransition(0.6 + index * 0.05)}
                     className="group"
                     whileHover={shouldReduceMotion ? undefined : { y: -3 }}
                     whileTap={shouldReduceMotion ? undefined : { y: -1 }}
@@ -161,12 +160,9 @@ export function Hero() {
                         className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-[#f0d47a82] to-transparent"
                         animate={undefined}
                       />
-                      <motion.div
-                        animate={floatAnimation(index)}
-                        transition={undefined}
-                      >
+                      <div>
                         <step.icon className="mx-auto h-4 w-4 text-[#d4af37] sm:h-5 sm:w-5" />
-                      </motion.div>
+                      </div>
                       <p className="mt-2 text-[11.5px] font-semibold leading-[1.28] tracking-[-0.01em] text-[#F5F1E8]">
                         {step.label}
                       </p>
@@ -180,7 +176,7 @@ export function Hero() {
 
           <motion.div
             {...fadeUp}
-            transition={{ duration: 0.5, delay: 1 }}
+            transition={fadeUpTransition(1)}
             className="mt-11 flex flex-wrap items-center justify-center gap-x-6 gap-y-2.5 lg:mt-12"
           >
             {trustIndicators.map((indicator) => (

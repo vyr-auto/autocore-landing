@@ -1,8 +1,9 @@
 "use client"
 
-import { motion, useInView, useReducedMotion } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { SectionTitle } from "@/components/landing/section-title"
+import { useLandingMotion } from "@/hooks/use-landing-motion"
 import {
   Tag,
   Package,
@@ -35,9 +36,8 @@ const examples = [
 
 export function Examples() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
-  const shouldReduceMotion = useReducedMotion()
-  const cardHover = shouldReduceMotion ? undefined : { y: -4, scale: 1.01 }
+  const { inViewAnimate, fadeUpTransition, inViewMargin, cardHover, tapScale } = useLandingMotion()
+  const isInView = useInView(ref, { once: true, margin: inViewMargin })
 
   return (
     <section id="examples" className="premium-section premium-tone-cool">
@@ -53,12 +53,12 @@ export function Examples() {
           {examples.map((example, index) => (
             <motion.div
               key={example.title}
-              initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 18 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.35, delay: index * 0.03 }}
+              initial={inViewAnimate(false)}
+              animate={inViewAnimate(isInView)}
+              transition={fadeUpTransition(index * 0.03)}
               className="group"
               whileHover={cardHover}
-              whileTap={shouldReduceMotion ? undefined : { scale: 0.996 }}
+              whileTap={tapScale}
             >
               <div className="premium-card p-4 lg:p-5">
                 <div className="mb-2.5 flex h-9 w-9 items-center justify-center rounded-lg border border-[#d4af3729] bg-[#15120c80]">

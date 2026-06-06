@@ -1,29 +1,31 @@
 "use client"
 
-import { motion, useInView, useReducedMotion } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Send } from "lucide-react"
 import { SectionTitle } from "@/components/landing/section-title"
+import { useLandingMotion } from "@/hooks/use-landing-motion"
 
 export function CTA() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
-  const shouldReduceMotion = useReducedMotion()
+  const { shouldReduceMotion, inViewAnimate, fadeUpTransition, inViewMargin, tapScale } =
+    useLandingMotion()
+  const isInView = useInView(ref, { once: true, margin: inViewMargin })
 
   return (
     <section id="contact" className="premium-section premium-tone-warm">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          initial={inViewAnimate(false)}
+          animate={inViewAnimate(isInView)}
+          transition={fadeUpTransition()}
           className="max-w-3xl mx-auto"
         >
           <div className="premium-card relative overflow-hidden rounded-2xl p-6 sm:p-8 lg:p-10">
-            <div className="absolute right-0 top-0 h-72 w-72 translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d4af371c] blur-xl" />
-            <div className="absolute bottom-0 left-0 h-64 w-64 -translate-x-1/2 translate-y-1/2 rounded-full bg-[#b8922e1c] blur-xl" />
+            <div className="cta-glow-blur absolute right-0 top-0 h-72 w-72 translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d4af371c] blur-xl" />
+            <div className="cta-glow-blur absolute bottom-0 left-0 h-64 w-64 -translate-x-1/2 translate-y-1/2 rounded-full bg-[#b8922e1c] blur-xl" />
 
             <div className="relative z-10 text-center">
               <SectionTitle
@@ -33,10 +35,7 @@ export function CTA() {
               />
 
               <div className="mt-7 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-                <motion.div
-                  whileHover={shouldReduceMotion ? undefined : { y: -2 }}
-                  whileTap={shouldReduceMotion ? undefined : { scale: 0.995 }}
-                >
+                <motion.div whileHover={shouldReduceMotion ? undefined : { y: -2 }} whileTap={tapScale}>
                   <Button
                     asChild
                     size="lg"
@@ -48,10 +47,7 @@ export function CTA() {
                     </a>
                   </Button>
                 </motion.div>
-                <motion.div
-                  whileHover={shouldReduceMotion ? undefined : { y: -2 }}
-                  whileTap={shouldReduceMotion ? undefined : { scale: 0.995 }}
-                >
+                <motion.div whileHover={shouldReduceMotion ? undefined : { y: -2 }} whileTap={tapScale}>
                   <Button
                     asChild
                     variant="outline"

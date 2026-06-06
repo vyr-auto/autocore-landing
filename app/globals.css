@@ -268,3 +268,31 @@ body {
     animation: none;
   }
 }
+
+/* Mobile: lighter visuals and smoother native scroll */
+@media (max-width: 767px) {
+  html,
+  body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+  }
+
+  .premium-bg-system::before {
+    opacity: 0.14;
+    background-size: auto, auto, auto, 120px 120px, 120px 120px;
+  }
+
+  .premium-bg-system::after {
+    opacity: 0.18;
+  }
+
+  .hero-glow-blur {
+    width: 14rem !important;
+    height: 14rem !important;
+    filter: blur(40px) !important;
+  }
+
+  .cta-glow-blur {
+    filter: blur(24px) !important;
+  }
+}

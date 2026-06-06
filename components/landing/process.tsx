@@ -1,8 +1,9 @@
 "use client"
 
-import { motion, useInView, useReducedMotion } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { SectionTitle } from "@/components/landing/section-title"
+import { useLandingMotion } from "@/hooks/use-landing-motion"
 
 const steps = [
   {
@@ -34,8 +35,8 @@ const steps = [
 
 export function Process() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
-  const shouldReduceMotion = useReducedMotion()
+  const { shouldReduceMotion, inViewAnimate, fadeUpTransition, inViewMargin } = useLandingMotion()
+  const isInView = useInView(ref, { once: true, margin: inViewMargin })
 
   return (
     <section id="process" className="premium-section premium-tone-neutral">
@@ -55,9 +56,9 @@ export function Process() {
               {steps.map((step, index) => (
                 <motion.div
                   key={step.number}
-                  initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.4, delay: index * 0.08 }}
+                  initial={inViewAnimate(false)}
+                  animate={inViewAnimate(isInView)}
+                  transition={fadeUpTransition(index * 0.08)}
                   className={`relative flex items-start gap-5 lg:gap-8 ${
                     index % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"
                   }`}

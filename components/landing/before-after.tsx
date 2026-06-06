@@ -1,9 +1,10 @@
 "use client"
 
-import { motion, useInView, useReducedMotion } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { X, Check, Copy, AlertCircle, RefreshCw, Zap, FileCheck, Sparkles, Clock, Settings } from "lucide-react"
 import { SectionTitle } from "@/components/landing/section-title"
+import { useLandingMotion } from "@/hooks/use-landing-motion"
 
 const beforeItems = [
   { icon: Copy, text: "Копирование данных без автоматизации" },
@@ -23,9 +24,9 @@ const afterItems = [
 
 export function BeforeAfter() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
-  const shouldReduceMotion = useReducedMotion()
-  const listHover = shouldReduceMotion ? undefined : { x: 3 }
+  const { shouldReduceMotion, inViewAnimate, fadeUpTransition, inViewMargin, listHover } =
+    useLandingMotion()
+  const isInView = useInView(ref, { once: true, margin: inViewMargin })
 
   return (
     <section id="result" className="premium-section premium-tone-warm">
@@ -40,9 +41,9 @@ export function BeforeAfter() {
         <div className="max-w-4xl mx-auto">
           <div className="grid gap-4 lg:grid-cols-2 lg:gap-6">
             <motion.div
-              initial={{ opacity: 0, x: shouldReduceMotion ? 0 : -24 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.52, delay: 0.1 }}
+              initial={shouldReduceMotion ? inViewAnimate(true) : { opacity: 0, x: -24 }}
+              animate={inViewAnimate(isInView)}
+              transition={fadeUpTransition(0.1)}
             >
               <div className="premium-card border-[#6b3a1a40] p-5 lg:p-6">
                 <div className="mb-5 flex items-center gap-2.5">
@@ -55,9 +56,9 @@ export function BeforeAfter() {
                   {beforeItems.map((item, index) => (
                     <motion.div
                       key={item.text}
-                      initial={{ opacity: 0 }}
-                      animate={isInView ? { opacity: 1 } : {}}
-                      transition={{ duration: 0.3, delay: 0.2 + index * 0.05 }}
+                      initial={inViewAnimate(false)}
+                      animate={inViewAnimate(isInView)}
+                      transition={fadeUpTransition(0.2 + index * 0.05)}
                       className="flex items-center gap-2.5 rounded-lg border border-[#6b3a1a2e] bg-[#6b3a1a17] p-2.5"
                       whileHover={listHover}
                     >
@@ -70,9 +71,9 @@ export function BeforeAfter() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: shouldReduceMotion ? 0 : 24 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.52, delay: 0.2 }}
+              initial={shouldReduceMotion ? inViewAnimate(true) : { opacity: 0, x: 24 }}
+              animate={inViewAnimate(isInView)}
+              transition={fadeUpTransition(0.2)}
             >
               <div className="premium-card p-5 lg:p-6">
                 <div className="mb-5 flex items-center gap-2.5">
@@ -87,9 +88,9 @@ export function BeforeAfter() {
                   {afterItems.map((item, index) => (
                     <motion.div
                       key={item.text}
-                      initial={{ opacity: 0 }}
-                      animate={isInView ? { opacity: 1 } : {}}
-                      transition={{ duration: 0.3, delay: 0.3 + index * 0.05 }}
+                      initial={inViewAnimate(false)}
+                      animate={inViewAnimate(isInView)}
+                      transition={fadeUpTransition(0.3 + index * 0.05)}
                       className="flex items-center gap-2.5 rounded-lg border border-[#d4af3736] bg-[#d4af3712] p-2.5"
                       whileHover={listHover}
                     >

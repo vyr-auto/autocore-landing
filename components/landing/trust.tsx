@@ -1,9 +1,10 @@
 "use client"
 
-import { motion, useInView, useReducedMotion } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { Check } from "lucide-react"
 import { SectionTitle } from "@/components/landing/section-title"
+import { useLandingMotion } from "@/hooks/use-landing-motion"
 
 const trustPoints = [
   "Работаем с реальными бизнес-процессами",
@@ -17,18 +18,17 @@ const trustPoints = [
 
 export function Trust() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
-  const shouldReduceMotion = useReducedMotion()
-  const cardHover = shouldReduceMotion ? undefined : { y: -3, scale: 1.005 }
+  const { inViewAnimate, fadeUpTransition, inViewMargin, cardHover } = useLandingMotion()
+  const isInView = useInView(ref, { once: true, margin: inViewMargin })
 
   return (
     <section className="premium-section premium-tone-cool">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          initial={inViewAnimate(false)}
+          animate={inViewAnimate(isInView)}
+          transition={fadeUpTransition()}
           className="max-w-3xl mx-auto"
         >
           <div className="text-center mb-9 lg:mb-12">
@@ -42,9 +42,9 @@ export function Trust() {
             {trustPoints.map((point, index) => (
               <motion.div
                 key={point}
-                initial={{ opacity: 0 }}
-                animate={isInView ? { opacity: 1 } : {}}
-                transition={{ duration: 0.3, delay: 0.1 + index * 0.04 }}
+                initial={inViewAnimate(false)}
+                animate={inViewAnimate(isInView)}
+                transition={fadeUpTransition(0.1 + index * 0.04)}
                 className="premium-card flex items-start gap-3 p-4"
                 whileHover={cardHover}
               >

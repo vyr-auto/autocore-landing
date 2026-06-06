@@ -1,9 +1,10 @@
 "use client"
 
-import { motion, useInView, useReducedMotion } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { Copy, AlertTriangle, Clock, Eye, Layers } from "lucide-react"
 import { SectionTitle } from "@/components/landing/section-title"
+import { useLandingMotion } from "@/hooks/use-landing-motion"
 
 const problems = [
   {
@@ -35,10 +36,8 @@ const problems = [
 
 export function Problems() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
-  const shouldReduceMotion = useReducedMotion()
-
-  const cardHover = shouldReduceMotion ? undefined : { y: -5, scale: 1.01 }
+  const { inViewAnimate, fadeUpTransition, inViewMargin, cardHover, tapScale } = useLandingMotion()
+  const isInView = useInView(ref, { once: true, margin: inViewMargin })
 
   return (
     <section className="premium-section premium-tone-cool">
@@ -54,12 +53,12 @@ export function Problems() {
           {problems.map((problem, index) => (
             <motion.div
               key={problem.title}
-              initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.45, delay: index * 0.06, ease: "easeOut" }}
+              initial={inViewAnimate(false)}
+              animate={inViewAnimate(isInView)}
+              transition={fadeUpTransition(index * 0.06)}
               className="group"
               whileHover={cardHover}
-              whileTap={shouldReduceMotion ? undefined : { scale: 0.995 }}
+              whileTap={tapScale}
             >
               <div className="premium-card p-5 lg:p-6">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-[#d4af3729] bg-[#15120c80]">

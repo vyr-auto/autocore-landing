@@ -1,6 +1,7 @@
 "use client"
 
-import { motion, useReducedMotion } from "framer-motion"
+import { motion } from "framer-motion"
+import { useLandingMotion } from "@/hooks/use-landing-motion"
 
 type SectionTitleProps = {
   title: string
@@ -9,18 +10,28 @@ type SectionTitleProps = {
 }
 
 export function SectionTitle({ title, description, className }: SectionTitleProps) {
-  const shouldReduceMotion = useReducedMotion()
+  const { shouldReduceMotion, visible, hidden, inViewMargin } = useLandingMotion()
+
+  const content = (
+    <>
+      <h2 className="premium-heading">{title}</h2>
+      {description ? <p className="premium-subheading">{description}</p> : null}
+    </>
+  )
+
+  if (shouldReduceMotion) {
+    return <div className={className}>{content}</div>
+  }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
+      initial={hidden(18)}
+      whileInView={visible}
+      viewport={{ once: true, margin: inViewMargin }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
-      <h2 className="premium-heading">{title}</h2>
-      {description ? <p className="premium-subheading">{description}</p> : null}
+      {content}
     </motion.div>
   )
 }

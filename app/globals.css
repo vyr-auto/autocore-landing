@@ -90,9 +90,22 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    height: auto;
+    scroll-behavior: auto;
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     @apply bg-background text-foreground;
-    min-height: 100svh;
+    min-height: 100%;
+    height: auto;
+    overflow-x: clip;
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+    touch-action: pan-y;
     background: #050505;
     letter-spacing: -0.01em;
   }
@@ -109,7 +122,7 @@
 
 @layer components {
   .premium-bg-system {
-    @apply relative isolate overflow-x-hidden;
+    @apply relative isolate overflow-x-clip;
     background:
       linear-gradient(160deg, #050505 0%, #080808 42%, #0e0d0b 74%, #050505 100%);
   }
@@ -258,23 +271,16 @@
   color: #F2EDE4;
 }
 
-html,
-body {
-  scroll-behavior: auto !important;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .premium-bg-system::before {
     animation: none;
   }
 }
 
-/* Mobile: lighter visuals and smoother native scroll */
+/* Mobile: lighter visuals */
 @media (max-width: 767px) {
-  html,
-  body {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: none;
+  html {
+    scroll-padding-top: 4.25rem;
   }
 
   .premium-bg-system::before {

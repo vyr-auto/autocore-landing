@@ -1,9 +1,4 @@
-"use client"
-
-import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
 import { SectionTitle } from "@/components/landing/section-title"
-import { useLandingMotion } from "@/hooks/use-landing-motion"
 import {
   Tag,
   Package,
@@ -35,14 +30,10 @@ const examples = [
 ]
 
 export function Examples() {
-  const ref = useRef(null)
-  const { inViewAnimate, fadeUpTransition, inViewMargin, cardHover, tapScale } = useLandingMotion()
-  const isInView = useInView(ref, { once: true, margin: inViewMargin })
-
   return (
     <section id="examples" className="premium-section premium-tone-cool">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div ref={ref} className="text-center max-w-3xl mx-auto mb-11 lg:mb-14">
+        <div className="text-center max-w-3xl mx-auto mb-11 lg:mb-14">
           <SectionTitle
             title="Примеры задач из реальной работы"
             description="Автоматизация охватывает склад, продажи, отчёты, документы, прайсы, уведомления и внутренние инструменты."
@@ -50,16 +41,8 @@ export function Examples() {
         </div>
 
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
-          {examples.map((example, index) => (
-            <motion.div
-              key={example.title}
-              initial={inViewAnimate(false)}
-              animate={inViewAnimate(isInView)}
-              transition={fadeUpTransition(index * 0.03)}
-              className="group"
-              whileHover={cardHover}
-              whileTap={tapScale}
-            >
+          {examples.map((example) => (
+            <div key={example.title} className="group">
               <div className="premium-card p-4 lg:p-5">
                 <div className="mb-2.5 flex h-9 w-9 items-center justify-center rounded-lg border border-[#d4af3729] bg-[#15120c80]">
                   <example.icon className="h-3.5 w-3.5 text-[#d4af37]" />
@@ -68,7 +51,7 @@ export function Examples() {
                   {example.title}
                 </h3>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

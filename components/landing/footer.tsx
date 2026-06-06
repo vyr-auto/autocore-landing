@@ -1,6 +1,7 @@
 "use client"
 
 import { Send, Mail } from "lucide-react"
+import { handleSectionClick } from "@/lib/scroll"
 
 const footerLinks = [
   { label: "Услуги", href: "#services" },
@@ -10,20 +11,6 @@ const footerLinks = [
 ]
 
 export function Footer() {
-  const handleSectionClick = (href: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!href.startsWith("#")) return
-    event.preventDefault()
-
-    const id = href.slice(1)
-    const section = document.getElementById(id)
-    if (!section) return
-
-    const headerOffset = 88
-    const top = section.getBoundingClientRect().top + window.scrollY - headerOffset
-    window.scrollTo({ top: Math.max(0, top), behavior: "auto" })
-    window.history.replaceState(null, "", `#${id}`)
-  }
-
   return (
     <footer className="premium-tone-footer border-t border-[#d4af3726] py-10 lg:py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

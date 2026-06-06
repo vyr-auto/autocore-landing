@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { handleSectionClick } from "@/lib/scroll"
 
 const navItems = [
   { label: "Услуги", href: "#services" },
@@ -16,26 +16,6 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  const handleSectionClick = (href: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!href.startsWith("#")) return
-    event.preventDefault()
-
-    const id = href.slice(1)
-    if (!id) {
-      window.scrollTo({ top: 0, behavior: "auto" })
-      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`)
-      return
-    }
-
-    const section = document.getElementById(id)
-    if (!section) return
-
-    const headerOffset = 88
-    const top = section.getBoundingClientRect().top + window.scrollY - headerOffset
-    window.scrollTo({ top: Math.max(0, top), behavior: "auto" })
-    window.history.replaceState(null, "", `#${id}`)
-  }
-
   useEffect(() => {
     const handleScroll = () => {
       const nextIsScrolled = window.scrollY > 20
@@ -47,7 +27,7 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "bg-[#050505]/92 border-b border-[#d4af3724] shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
           : "bg-transparent"
@@ -88,55 +68,50 @@ export function Header() {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden rounded-lg border border-[#d4af3724] bg-[#050505]/70 p-2 text-[#F5F1E8]"
             aria-label="Открыть меню"
+            aria-expanded={isMobileMenuOpen}
           >
             {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
 
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="lg:hidden bg-[#050505]/95 border-b border-[#d4af3724]"
-          >
-            <nav className="container mx-auto px-4 py-5 flex flex-col gap-1.5">
-              {navItems.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  onClick={(event) => {
-                    handleSectionClick(item.href)(event)
-                    setIsMobileMenuOpen(false)
-                  }}
-                  className="text-[16px] leading-[1.35] tracking-[-0.01em] text-[#F5F1E8CC] hover:text-[#F5F1E8] transition-colors py-3 px-3 rounded-lg hover:bg-[#d4af370f]"
-                >
-                  {item.label}
-                </a>
-              ))}
-              <div className="pt-4 mt-2 border-t border-[#d4af3726]">
-                <Button
-                  asChild
-                  className="w-full h-11 rounded-xl border border-[#f0d47a4d] bg-gradient-to-b from-[#ebc95e] via-[#d4af37] to-[#b8922e] text-[#050505] font-semibold"
-                >
-                  <a
-                    href="#contact"
-                    onClick={(event) => {
-                      handleSectionClick("#contact")(event)
-                      setIsMobileMenuOpen(false)
-                    }}
-                  >
-                    Обсудить задачу
-                  </a>
-                </Button>
-              </div>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div
+        className={`lg:hidden overflow-hidden border-b border-[#d4af3724] bg-[#050505]/95 transition-[max-height,opacity] duration-300 ease-out ${
+          isMobileMenuOpen ? "max-h-[28rem] opacity-100" : "max-h-0 opacity-0 border-b-0"
+        }`}
+      >
+        <nav className="container mx-auto px-4 py-5 flex flex-col gap-1.5">
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={(event) => {
+                handleSectionClick(item.href)(event)
+                setIsMobileMenuOpen(false)
+              }}
+              className="text-[16px] leading-[1.35] tracking-[-0.01em] text-[#F5F1E8CC] hover:text-[#F5F1E8] transition-colors py-3 px-3 rounded-lg hover:bg-[#d4af370f]"
+            >
+              {item.label}
+            </a>
+          ))}
+          <div className="pt-4 mt-2 border-t border-[#d4af3726]">
+            <Button
+              asChild
+              className="w-full h-11 rounded-xl border border-[#f0d47a4d] bg-gradient-to-b from-[#ebc95e] via-[#d4af37] to-[#b8922e] text-[#050505] font-semibold"
+            >
+              <a
+                href="#contact"
+                onClick={(event) => {
+                  handleSectionClick("#contact")(event)
+                  setIsMobileMenuOpen(false)
+                }}
+              >
+                Обсудить задачу
+              </a>
+            </Button>
+          </div>
+        </nav>
+      </div>
     </header>
   )
 }

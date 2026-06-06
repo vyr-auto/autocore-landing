@@ -12,7 +12,7 @@ import { Footer } from "@/components/landing/footer"
 
 export default function Home() {
   return (
-    <main id="top" className="premium-bg-system relative min-h-screen overflow-x-hidden">
+    <main id="top" className="premium-bg-system relative min-h-screen overflow-x-clip">
       <Header />
       <Hero />
       <Problems />

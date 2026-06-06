@@ -44,7 +44,10 @@ function Invoke-GitHubApi {
     return Invoke-RestMethod @params
 }
 
+$gh = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) "tools\gh\bin\gh.exe"
 $credentialTargets = @(
+    "git:https://x-access-token@github.com",
+    "git:https://vyr-auto@github.com",
     "git:https://github.com",
     "git:https://Denwien@github.com",
     "GitHub - https://api.github.com/ffdfd2424325"
@@ -52,6 +55,23 @@ $credentialTargets = @(
 
 $script:token = $null
 $script:login = $null
+
+if (Test-Path $gh) {
+    try {
+        $ghToken = (& $gh auth token 2>$null).Trim()
+        if ($ghToken) {
+            $user = Invoke-GitHubApi -Method GET -Path "/user" -Token $ghToken
+            if ($user.login -eq "vyr-auto") {
+                $script:token = $ghToken
+                $script:login = $user.login
+            }
+        }
+    } catch {}
+}
+
+if ($script:token) {
+    return
+}
 
 foreach ($target in $credentialTargets) {
     $stored = Get-WindowsCredential -Target $target
